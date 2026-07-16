@@ -85,7 +85,7 @@
                 <div class="container">
                     <h1>Cadastrar um autor</h1>
                     <div class="div-form">
-                        <form id="form_postagem">
+                        <form id="form_postagem" method="post" onsubmit="return validar()">
                             <label>
                                 Nome:
                                 <br>
@@ -93,7 +93,7 @@
                             </label>
                             <br>
 
-                            <button onclick="cadastrar()">Cadastrar</button>
+                            <button>Cadastrar</button>
                         </form>
                     </div>
 
@@ -115,19 +115,27 @@
         document.getElementById("form_postagem").reset();
     }
 
-    function cadastrar() {
-        var nome = nome.value
+    function validar() {
+        var ipt_nome = nome.value
 
         var caracteres = ['!', '@', '#', '$', '%', '¨', '&', '*', '(', ')', '-', '=', '+', '`', '[', ']', '/', '?', '|', '^', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         var encontrou = false
         for (let i = 0; i < caracteres.length; i++) {
-            if (nome.includes(caracteres[i])) {
-                alert('O nome não pode conter caracteres especiais ou numéricos!')
+            if (ipt_nome.includes(caracteres[i])) {
                 encontrou = true
-                return false
+                break
             }
         }
 
+        if (encontrou == true) {
+            alert('O nome do autor não pode conter caracteres especiais ou numéricos!')
+            return false
+        } else {
+            return cadastrar()
+        }
+    }
+
+    function cadastrar() {
         var corpo = {
             nome: form_postagem.nome.value
         }
@@ -159,5 +167,4 @@
 
         return false;
     }
-
 </script>

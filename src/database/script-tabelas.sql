@@ -1,7 +1,5 @@
 CREATE DATABASE livrariaRecuperacao20262;
-
 USE livrariaRecuperacao20262;
-select * from livro;
 
 CREATE TABLE autor (
 	id INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,6 +22,7 @@ CREATE TABLE livro (
 	titulo VARCHAR(50),
     fkAutor INT,
     fkGenero INT,
+    estoque INT,
     precoCompra DOUBLE,
     precoVenda DOUBLE,
     CONSTRAINT fk_livro_autor FOREIGN KEY (fkAutor) REFERENCES autor(id),

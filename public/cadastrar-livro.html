@@ -82,7 +82,7 @@
                 <div class="container">
                     <h1>Cadastrar um livro</h1>
                     <div class="div-form">
-                        <form id="form_postagem" method="post" onsubmit="return cadastrar()">
+                        <form id="form_postagem" method="post" onsubmit="return validar()">
                             <label>
                                 Título:
                                 <br>
@@ -115,6 +115,12 @@
                                 <input name="precoVenda" id="precoVenda" maxlength="20" type="Text"></input>
                             </label>
 
+                            <label>
+                                Estoque:
+                                <br>
+                                <input name="estoque" id="estoque" maxlength="3" type="number"></input>
+                            </label>
+
 
                             <button>Cadastrar</button>
                         </form>
@@ -137,16 +143,16 @@
         document.getElementById("form_postagem").reset();
     }
 
-    function cadastrar() {
+    function validar() {
         var preco_compra = Number(precoCompra.value)
         var preco_venda = Number(precoVenda.value)
         var venda = preco_compra
 
-        if (preco_compra >= 100 && (fkGenero_lista.value == 'horror' || fkGenero_lista == 'romance')) {
+        if (preco_compra >= 100 && (fkGenero_lista.value == '1' || fkGenero_lista == '2')) {
             venda = preco_compra * 1.225
-        } else if (preco_compra <= 50 && (fkGenero_lista.value == 'poesia' || fkGenero_lista == 'horror')) {
+        } else if (preco_compra <= 50 && (fkGenero_lista.value == '3' || fkGenero_lista == '1')) {
             venda = preco_compra * 1.25
-        } else if ((preco_compra > 50 && preco_compra < 100) && (fkGenero_lista.value == 'fantasia')) {
+        } else if ((preco_compra > 50 && preco_compra < 100) && (fkGenero_lista.value == '4')) {
             venda = preco_compra * 1.275
         }
 
@@ -154,41 +160,46 @@
             alert('Preço de venda não pode ser menor que R$' + venda.toFixed(2))
             return false
         } else {
-            var corpo = {
-                titulo: form_postagem.titulo.value,
-                fkGenero: form_postagem.fkGenero_lista.value,
-                fkAutor: form_postagem.fkAutor_lista.value,
-                precoCompra: form_postagem.precoCompra.value,
-                precoVenda: form_postagem.precoVenda.value
-            }
-
-            fetch(`/livros/cadastrar`, {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(corpo)
-            }).then(function (resposta) {
-
-                console.log("resposta: ", resposta);
-
-                if (resposta.ok) {
-                    window.alert("Post realizado com sucesso. Você será redirecionado ao Acervo.");
-                    window.location = "/";
-                    limparFormulario();
-
-                } else if (resposta.status == 404) {
-                    window.alert("Deu 404!");
-                } else {
-                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
-                }
-            }).catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-
-            });
-
-            return false;
+            return cadastrar()
         }
+    }
+
+    function cadastrar() {
+        var corpo = {
+            titulo: form_postagem.titulo.value,
+            fkGenero: form_postagem.fkGenero_lista.value,
+            fkAutor: form_postagem.fkAutor_lista.value,
+            precoCompra: form_postagem.precoCompra.value,
+            precoVenda: form_postagem.precoVenda.value,
+            estoque: form_postagem.estoque.value
+        }
+
+        fetch(`/livros/cadastrar`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(corpo)
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                window.alert("Post realizado com sucesso. Você será redirecionado ao Acervo.");
+                window.location = "/";
+                limparFormulario();
+
+            } else if (resposta.status == 404) {
+                window.alert("Deu 404!");
+            } else {
+                throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+
+        });
+
+        return false;
     }
 
 
